@@ -1,34 +1,28 @@
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
-import sys, select, termios, tty
+from rclpy.exceptions import ParameterNotDeclaredException
+from rcl_interfaces.msg import ParameterType
+import curses
+import sys
 
-settings = termios.tcgetattr(sys.stdin)
-msg = """
-Poruszanie:
-w-do przodu 
-a- w lewo
-s- do dolu
-d- w prawo
-CTRL-C wyjscie
-"""
+global msg
 
-moveKeys = {
-		'w':(1,0),
-		'a':(0,1),
-		'd':(0,-1),
-		's':(-1,0),
-		'W':(1,0),
-		'A':(0,1),
-		'D':(0,-1),
-		'S':(-1,0),
-	       }
 def getKey():
-    tty.setraw(sys.stdin.fileno())
-    #select.select([sys.stdin], [], [], 0)
-    key = sys.stdin.read(1)
-    termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
-    return key
+    global msg
+    stdscr = curses.initscr()
+    stdscr.addstr(0,0,msg)
+    curses.cbreak()
+    stdscr.keypad(1)
+    curses.noecho()
+    stdscr.timeout(100)
+    key=stdscr.getch()
+    if key != ord('q'):
+    	return key
+    else:
+    	curses.endwin()
+    	return key
+
 
 class myTeleopNode(Node):
     def __init__(self):
@@ -36,40 +30,54 @@ class myTeleopNode(Node):
         self.publisher_=self.create_publisher(Twist, '/turtle1/cmd_vel', 10)
         self.timer_=self.create_timer(0.1, self.publish_news)
         self.get_logger().info("My Teleop has been started")
-
-    def publish_news(self,key):
+        self.declare_parameter("up",'w')
+        self.declare_parameter("down",'s')
+        self.declare_parameter("left",'a')
+        self.declare_parameter("right",'d')
+       
+    def publish_news(self):
         twist = Twist()
         x = 0.0
         th = 0.0
-        #key=getKey()
+        key=getKey()
+        moveKeys = {
+        	ord(self.get_parameter('up').get_parameter_value().string_value): (1,0),
+        	ord(self.get_parameter('down').get_parameter_value().string_value): (-1,0),
+        	ord(self.get_parameter('left').get_parameter_value().string_value): (0,1),
+        	ord(self.get_parameter('right').get_parameter_value().string_value): (0,-1),
+        		}
         if key in moveKeys.keys():
         	x = moveKeys[key][0]
         	th = moveKeys[key][1]
         else:
         	x = 0.0
         	th = 0.0
+        	if key==ord('q'):
+        		sys.exit(0)
 
-        twist.linear.x = x*0.5
+        twist.linear.x = x*1.0
         twist.linear.y = 0.0
         twist.linear.z = 0.0
         twist.angular.x = 0.0
         twist.angular.y = 0.0
-        twist.angular.z = th*1.0
+        twist.angular.z = th*2.0
         self.publisher_.publish(twist)
-
+        
 
 def main(args=None):
+    global msg
+    if args is None:
+    	args = sys.argv
     rclpy.init(args=args)
     node = myTeleopNode()
+    
+    msg = "Poruszanie: \n"+node.get_parameter('up').get_parameter_value().string_value+" do przodu\n"
+    msg = msg + node.get_parameter('down').get_parameter_value().string_value+" do tylu\n"
+    msg = msg + node.get_parameter('left').get_parameter_value().string_value+" w lewo\n"
+    msg = msg + node.get_parameter('right').get_parameter_value().string_value+" w prawo\n"
     print(msg)
-    #rclpy.spin(node)
-    i=0
-    while i==0:
-    	key=getKey()
-    	if not key=='\x03':
-    		node.publish_news(key)
-    	else:
-    		i=1
+    rclpy.spin(node)
+    curses.endwin()
     node.destroy_node()
     rclpy.shutdown()
 

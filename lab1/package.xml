@@ -9,10 +9,7 @@
 
   <depend>rclpy</depend>
   <depend>geometry_msgs</depend>
-  <depend>sys</depend>
-  <depend>select</depend>
-  <depend>termios</depend>
-  <depend>tty</depend>
+  <depend>curses</depend>
   
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
