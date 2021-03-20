@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'node = lab1.node:main'
+            'my_teleop = lab1.my_teleop:main'
         ],
     },
 )

@@ -7,6 +7,13 @@
   <maintainer email="kacperm102@gmail.com">kacper</maintainer>
   <license>licencja</license>
 
+  <depend>rclpy</depend>
+  <depend>geometry_msgs</depend>
+  <depend>sys</depend>
+  <depend>select</depend>
+  <depend>termios</depend>
+  <depend>tty</depend>
+  
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
   <test_depend>ament_pep257</test_depend>
