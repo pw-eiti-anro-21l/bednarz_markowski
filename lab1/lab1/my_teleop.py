@@ -27,7 +27,7 @@ def getKey():
 class myTeleopNode(Node):
     def __init__(self):
         super().__init__("my_teleop")
-        self.publisher_=self.create_publisher(Twist, '/turtle1/cmd_vel', 10)
+        self.publisher_=self.create_publisher(Twist, 'turtle1/cmd_vel', 10)
         self.timer_=self.create_timer(0.1, self.publish_news)
         self.get_logger().info("My Teleop has been started")
         self.declare_parameter("up",'w')
@@ -74,7 +74,7 @@ def main(args=None):
     msg = "Poruszanie: \n"+node.get_parameter('up').get_parameter_value().string_value+" do przodu\n"
     msg = msg + node.get_parameter('down').get_parameter_value().string_value+" do tylu\n"
     msg = msg + node.get_parameter('left').get_parameter_value().string_value+" w lewo\n"
-    msg = msg + node.get_parameter('right').get_parameter_value().string_value+" w prawo\n"
+    msg = msg + node.get_parameter('right').get_parameter_value().string_value+" w prawo\n"+"q-wyjscie\n"
     print(msg)
     rclpy.spin(node)
     curses.endwin()
