@@ -1,0 +1,84 @@
+<robot name="robot">
+
+	<link name="baza">
+		<visual>
+			<material name="blue">
+				<color rgba="0 0 0.8 1"/>
+			</material>
+			<geometry>
+				<origin xyz="0 0 0" rpy="0 0 0"/>
+				<cylinder length="0.5" radius="0.2"/>
+			</geometry>
+		</visual>
+	</link>
+	<link name="czlon1">
+		<visual>
+			<material name="red">
+				<color rgba="1 0 0 1"/>
+			</material>
+			<geometry>
+				<origin xyz="0 0 0" rpy="0 0 0"/>
+				<cylinder length="0.2" radius="0.1"/>
+			</geometry>
+		</visual>
+	</link>
+	<joint name="poloczenie-baza-czlon1" type="revolute">
+		<origin xyz="0 0 0" rpy="0 0 0"/>
+		<parent link="baza"/>
+		<child link="czlon1" />
+		<axis xyz="0 0 1" />
+		<limit upper="0" lower="-.5" effort="10" velocity="10" />
+	</joint>
+	<link name="czlon2">
+		<visual>
+			<material name="red">
+				<color rgba="1 0 0 1"/>
+			</material>
+			<geometry>
+				<origin xyz="0 0 0" rpy="0 0 0"/>
+				<cylinder length="0.2" radius="0.1"/>
+			</geometry>
+		</visual>
+	</link>
+	<joint name="poloczenie-czlon1-czlon2" type="revolute">
+		<origin xyz="0 0 0" rpy="-1.57 0 0"/>
+		<parent link="czlon1"/>
+		<child link="czlon2" />
+		<axis xyz="0 0 1" />
+		<limit upper="0" lower="-.5" effort="10" velocity="10" />
+	</joint>
+	<link name="czlon3">
+		<visual>
+			<material name="red">
+				<color rgba="1 0 0 1"/>
+			</material>
+			<geometry>
+				<origin xyz="0 0 0" rpy="0 0 0"/>
+				<cylinder length="0.2" radius="0.1"/>
+			</geometry>
+		</visual>
+	</link>
+	<joint name="poloczenie-czlon2-czlon3" type="revolute">
+		<origin xyz="0.5 0 0" rpy="0 0 0"/>
+		<parent link="czlon2"/>
+		<child link="czlon3" />
+		<axis xyz="0 0 1" />
+		<limit upper="0" lower="-.5" effort="10" velocity="10" />
+	</joint>
+	<link name="koncowka">
+		<visual>
+			<material name="blue">
+				<color rgba="0 0 0.8 1"/>
+			</material>
+			<geometry>
+				<origin xyz="0 0 0" rpy="0 0 0"/>
+				<cylinder length="0.2" radius="0.2"/>
+			</geometry>
+		</visual>
+	</link>
+	<joint name="poloczenie-czlon3-koncowka" type="fixed">
+		<origin xyz="0 0 0"/>
+		<parent link="czlon3"/>
+		<child link="koncowka" />
+	</joint>
+</robot>
