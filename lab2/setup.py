@@ -26,7 +26,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'DHtoURDF = lab2.DHtoURDF:main'
+            'state_publisher = lab2.state_publisher:main'
         ],
     },
 )

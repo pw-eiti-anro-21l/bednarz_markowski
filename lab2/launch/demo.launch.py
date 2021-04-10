@@ -2,17 +2,23 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
-from launch.substitutions import LaunchConfiguration, Command
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
 def generate_launch_description():
 
   use_sim_time = LaunchConfiguration('use_sim_time', default='false')
-  xacro_file_name = 'robotZablokowane.urdf.xacro.xml'
-  rviz2_file_name = 'robot.rviz'
-  xacro = os.path.join(get_package_share_directory('lab2'), xacro_file_name)
+  urdf_file_name = 'robot2.urdf.xml'
+  rviz2_file_name = 'robot2.rviz'
   rviz2 = os.path.join(get_package_share_directory('lab2'), rviz2_file_name)
   
+
+  print("urdf_file_name : {}".format(urdf_file_name))
+
+  urdf = os.path.join(
+      get_package_share_directory('lab2'),
+      urdf_file_name)
+
   return LaunchDescription([
       DeclareLaunchArgument(
           'use_sim_time',
@@ -23,10 +29,8 @@ def generate_launch_description():
           executable='robot_state_publisher',
           name='robot_state_publisher',
           output='screen',
-          parameters=[{
-          	'use_sim_time': use_sim_time,
-          	'robot_description': Command(['xacro',' ',xacro])
-          }]),
+          parameters=[{'use_sim_time': use_sim_time}],
+          arguments=[urdf]),
       Node(
           package='rviz2',
           executable='rviz2',
