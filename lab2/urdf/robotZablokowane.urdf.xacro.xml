@@ -26,12 +26,11 @@
 			</geometry>
 		</visual>
 	</link>
-	<joint name="poloczenie-baza-czlon1" type="revolute">
+	<joint name="poloczenie-baza-czlon1" type="fixed">
 		<origin xyz="${params['czlon1']['xyz']}" rpy="${params['czlon1']['rpy']}"/>
 		<parent link="baza"/>
 		<child link="czlon1" />
-		<axis xyz="0 0 1" />
-		<limit upper="0" lower="-.5" effort="10" velocity="10" />
+
 	</joint>
 	<link name="czlon2">
 		<visual>
@@ -44,12 +43,10 @@
 			</geometry>
 		</visual>
 	</link>
-	<joint name="poloczenie-czlon1-czlon2" type="revolute">
+	<joint name="poloczenie-czlon1-czlon2" type="fixed">
 		<origin xyz="${params['czlon2']['xyz']}" rpy="${params['czlon2']['rpy']}"/>
 		<parent link="czlon1"/>
 		<child link="czlon2" />
-		<axis xyz="0 0 1" />
-		<limit upper="0" lower="-.5" effort="10" velocity="10" />
 	</joint>
 	<link name="czlon3">
 		<visual>
@@ -62,12 +59,10 @@
 			</geometry>
 		</visual>
 	</link>
-	<joint name="poloczenie-czlon2-czlon3" type="revolute">
+	<joint name="poloczenie-czlon2-czlon3" type="fixed">
 		<origin xyz="${params['czlon3']['xyz']}" rpy="${params['czlon3']['rpy']}"/>
 		<parent link="czlon2"/>
 		<child link="czlon3" />
-		<axis xyz="0 0 1" />
-		<limit upper="0" lower="-.5" effort="10" velocity="10" />
 	</joint>
 	<link name="koncowka">
 		<visual>
@@ -76,7 +71,7 @@
 				<color rgba="0 0 0.8 1"/>
 			</material>
 			<geometry>
-				<box size= "1 1 1"/>
+				<box size= "0.01 0.01 0.01"/>
 			</geometry>
 		</visual>
 	</link>
