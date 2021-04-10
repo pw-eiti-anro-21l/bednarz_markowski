@@ -2,6 +2,7 @@
 
 <robot name="robot" xmlns:xacro="http://www.ros.org/wiki/xacro" >
 	
+	<xacro:property name="hbaza" value="${0.2}"/>
 	<xacro:property name="params" value="${load_yaml('parametry.yaml')}"/>
 
 	<link name="baza">
@@ -11,13 +12,13 @@
 				<color rgba="0 0 0.8 1"/>
 			</material>
 			<geometry>
-				<box size= "0.1 0.1 0.1"/>
+				<box size= "0.1 0.1 ${hbaza}"/>
 			</geometry>
 		</visual>
 	</link>
 	<link name="czlon1">
 		<visual>
-			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<origin xyz="${params['czlon1']['x']} 0 ${hbaza*0.5}" rpy="0 0 0"/>
 			<material name="red">
 				<color rgba="1 0 0 1"/>
 			</material>
@@ -30,16 +31,17 @@
 		<origin xyz="${params['czlon1']['xyz']}" rpy="${params['czlon1']['rpy']}"/>
 		<parent link="baza"/>
 		<child link="czlon1" />
+		<axis xyz="0 0 1"/>
 
 	</joint>
 	<link name="czlon2">
 		<visual>
-			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<origin xyz="${params['czlon2']['x']+0.5*params['czlon3']['x']} ${-params['czlon1']['dlugosc']} 0" rpy="0 0 0"/>
 			<material name="red">
 				<color rgba="1 0 0 1"/>
 			</material>
 			<geometry>
-				<cylinder length="${params['czlon2']['dlugosc']}" radius="0.1"/>
+				<box size= "${params['czlon3']['x']} 0.1 0.1"/>
 			</geometry>
 		</visual>
 	</link>
@@ -47,10 +49,11 @@
 		<origin xyz="${params['czlon2']['xyz']}" rpy="${params['czlon2']['rpy']}"/>
 		<parent link="czlon1"/>
 		<child link="czlon2" />
+		<axis xyz="0 0 1"/>
 	</joint>
 	<link name="czlon3">
 		<visual>
-			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<origin xyz="${params['czlon2']['x']} ${-params['czlon1']['dlugosc']} 0" rpy="0 0 0"/>
 			<material name="red">
 				<color rgba="1 0 0 1"/>
 			</material>
@@ -63,21 +66,23 @@
 		<origin xyz="${params['czlon3']['xyz']}" rpy="${params['czlon3']['rpy']}"/>
 		<parent link="czlon2"/>
 		<child link="czlon3" />
+		<axis xyz="0 0 1"/>
 	</joint>
 	<link name="koncowka">
 		<visual>
-			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<origin xyz="${params['czlon2']['x']+0.1} ${-params['czlon1']['dlugosc']} 0" rpy="0 0 0"/>
 			<material name="white">
 				<color rgba="1 1 1 1"/>
 			</material>
 			<geometry>
-				<box size= "0.1 0.1 0.1"/>
+				<box size= "0.25 0.1 0.1"/>
 			</geometry>
 		</visual>
 	</link>
 	<joint name="poloczenie-czlon3-koncowka" type="fixed">
-		<origin xyz="0 0 0"/>
+		<origin xyz="0 0 0" rpy="0 0 0"/>
 		<parent link="czlon3"/>
 		<child link="koncowka" />
+		<axis xyz="0 0 1"/>
 	</joint>
 </robot>
