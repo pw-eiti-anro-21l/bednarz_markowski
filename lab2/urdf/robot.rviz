@@ -50,15 +50,21 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        baza:
+        axis:
           Value: true
-        czlon1:
+        body:
           Value: true
-        czlon2:
+        box:
           Value: true
-        czlon3:
+        head:
           Value: true
-        koncowka:
+        leg1:
+          Value: true
+        leg2:
+          Value: true
+        odom:
+          Value: true
+        rod:
           Value: true
       Marker Scale: 1
       Name: TF
@@ -66,13 +72,17 @@ Visualization Manager:
       Show Axes: true
       Show Names: false
       Tree:
-        baza:
-          czlon1:
-            czlon2:
-              czlon3:
-                koncowka:
-                  {}
-
+        odom:
+          axis:
+            body:
+              head:
+                rod:
+                  box:
+                    {}
+            leg1:
+              {}
+            leg2:
+              {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -93,27 +103,37 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        baza:
+        axis:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        czlon1:
+        body:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        czlon2:
+        box:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        czlon3:
+        head:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        koncowka:
+        leg1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        leg2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        rod:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -126,7 +146,7 @@ Visualization Manager:
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: baza
+    Fixed Frame: odom
     Frame Rate: 30
   Name: root
   Tools:

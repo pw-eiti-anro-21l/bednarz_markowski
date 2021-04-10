@@ -6,6 +6,7 @@ from rclpy.qos import QoSProfile
 from geometry_msgs.msg import Quaternion
 from sensor_msgs.msg import JointState
 from tf2_ros import TransformBroadcaster, TransformStamped
+
 class StatePublisher(Node):
 
   def __init__(self):
@@ -32,7 +33,7 @@ class StatePublisher(Node):
       self.states =[0 ,0 ,0]
       self.timer = self.create_timer(0.1, self.timer)
 
-def timer(self):
+  def timer(self):
       try:
             
             for i in range(len(self.states)):
@@ -78,3 +79,6 @@ def main():
 
 if __name__ == '__main__':
   main()
+  node = StatePublisher()
+  rclpy.spin(node)
+
