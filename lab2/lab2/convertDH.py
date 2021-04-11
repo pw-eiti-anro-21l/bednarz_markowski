@@ -10,8 +10,8 @@ def main():
     for line in f:
     	DHtab.append(line.split())
     f.close()
-    dlugosci = [0.1, 0.2, 0.1]
-    i=0
+    #dlugosci = [0.3, 0.2, 0.1]
+    #i=0
     plik = "../urdf/parametry.yaml"
     f = open(plik, 'w')
     for linia in DHtab:
@@ -29,7 +29,7 @@ def main():
     	transX = m.Matrix.Translation((a,0,0))
     	rotAlfa = m.Matrix.Rotation(alfa, 4, 'X')
     	
-    	T = rotTheta @ transZ @ transX @ rotAlfa
+    	T = transZ @ rotTheta @ transX @ rotAlfa
     	rpy = T.to_euler()
     	xyz = T.to_translation()
     	
@@ -37,8 +37,11 @@ def main():
     	f.write(f'{nazwa}:\n')
     	f.write(f'  rpy: {rpy[0]} {rpy[1]} {rpy[2]}\n')
     	f.write(f'  xyz: {xyz[0]} {xyz[1]} {xyz[2]}\n')
-    	f.write(f'  dlugosc: {dlugosci[i]}\n')
-    	i = i+1
+    	f.write(f'  dlugosc: {a}\n')
+    	f.write(f'  wysokosc: {d}\n')
+    	f.write(f'  x: {xyz[0]/2} \n')
+    	f.write(f'  z: {xyz[2]/2} \n')
+    	#i = i+1
     	#print(f' rpy {rpy} xyz {xyz} \n')
     	
     	
