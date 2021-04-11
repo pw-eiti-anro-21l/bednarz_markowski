@@ -10,9 +10,8 @@ def main():
     for line in f:
     	DHtab.append(line.split())
     f.close()
-    #dlugosci = [0.3, 0.2, 0.1]
-    #i=0
-    plik = "../urdf/parametry.yaml"
+
+    plik = "../urdf/parametryDH.yaml"
     f = open(plik, 'w')
     for linia in DHtab:
     	if linia[0] == 'i':
@@ -41,20 +40,6 @@ def main():
     	f.write(f'  wysokosc: {d}\n')
     	f.write(f'  x: {xyz[0]/2} \n')
     	f.write(f'  z: {xyz[2]/2} \n')
-    	#i = i+1
-    	#print(f' rpy {rpy} xyz {xyz} \n')
-    	
-    	
-    	
-    
-    
-    
-    	
-
-    
-    	
-    
-
 
 if __name__ == '__main__':
     main()
