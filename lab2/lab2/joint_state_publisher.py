@@ -12,7 +12,7 @@ class StatePublisher(Node):
   def __init__(self):
       rclpy.init()
       super().__init__('state_publisher')
-      self.reverse = False
+      self.jointDir = [1, -1, 1]
 
       qos_profile = QoSProfile(depth=10)
       self.joint_pub = self.create_publisher(JointState, 'joint_states', qos_profile)
@@ -37,15 +37,16 @@ class StatePublisher(Node):
       try:
             
             for i in range(len(self.states)):
-              if self.reverse:
-                self.states[i] -= self.degree
-              else:
-                self.states[i] += self.degree
+              self.states[i] += self.jointDir[i]*self.degree
             
-            if self.states[0] >pi/2:
-              self.reverse = True
-            if self.states[0] < 0:
-              self.reverse = False
+            if self.states[0] > pi/2 or self.states[0] < -pi/2:
+              self.jointDir[0]*= -1
+            if self.states[1] > 0 or self.states[1] < -pi/4:
+              self.jointDir[1]*= -1
+            if self.states[2] > pi/4 or self.states[2] < -pi/4:
+              self.jointDir[2]*= -1
+
+              
 
             # update joint_state
             now = self.get_clock().now()
