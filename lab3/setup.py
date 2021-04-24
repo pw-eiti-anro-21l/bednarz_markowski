@@ -26,8 +26,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'joint_state_publisher = lab3.joint_state_publisher:main',
-            'nonkdl_dkin = lab3.nonkdl_dkin:main'
+            'nonkdl_dkin = lab3.nonkdl_dkin:main',
+            'kdl_dkin = lab3.kdl_dkin:main'
         ],
     },
 )

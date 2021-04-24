@@ -13,19 +13,53 @@ from rclpy.qos import QoSProfile
 from ament_index_python.packages import get_package_share_directory
 
 
+
 class nonKdlNode(Node):
     def __init__(self):
     	super().__init__("nonkdl_dkin")
-    	self.publisher_ = self.create_publisher(PoseStamped, '/no_kdl_pose', QoSProfile(depth=10))
+    	self.publisher_ = self.create_publisher(PoseStamped, '/non_kdl_pose', QoSProfile(depth=10))
     	self.get_logger().info("nonkdl has been started")
     	self.subscription = self.create_subscription(JointState, 'joint_states', self.forwardKin,10)
-    	
+
     	
     def forwardKin(self,msg):
     	
-    	M = self.wczytaj()
+    	# wczytanie danych z pliku
+    	DHtab = []
+    	plik = "DHtab.txt"
     	
-    	Mk = M[0] @ M[1] @ M[2]
+    	f = open(os.path.join(get_package_share_directory('lab3'),plik),"r")
+    	for line in f:
+    		if line[0] == 'i':
+    			continue
+    		DHtab.append(line.split())
+    	f.close()
+
+    	a, alfa, d, theta = float(DHtab[0][1]),float(DHtab[0][2]),float(DHtab[0][3]),float(DHtab[0][4])
+    	#liczenie macierzy transformacji jednorodnej
+    	rotTheta = m.Matrix.Rotation(theta+msg.position[0], 4, 'Z')
+    	transZ = m.Matrix.Translation((0,0,d))
+    	transX = m.Matrix.Translation((a,0,0))
+    	rotAlfa = m.Matrix.Rotation(alfa, 4, 'X')
+    	M1 = rotAlfa @ transX @ rotTheta @ transZ
+    	
+    	a, alfa, d, theta = float(DHtab[1][1]),float(DHtab[1][2]),float(DHtab[1][3]),float(DHtab[1][4])
+    	#liczenie macierzy transformacji jednorodnej
+    	rotTheta = m.Matrix.Rotation(theta+msg.position[1], 4, 'Z')
+    	transZ = m.Matrix.Translation((0,0,d))
+    	transX = m.Matrix.Translation((a,0,0))
+    	rotAlfa = m.Matrix.Rotation(alfa, 4, 'X')
+    	M2 = rotAlfa @ transX @ rotTheta @ transZ
+    	
+    	a, alfa, d, theta = float(DHtab[2][1]),float(DHtab[2][2]),float(DHtab[2][3]),float(DHtab[2][4])
+    	#liczenie macierzy transformacji jednorodnej
+    	rotTheta = m.Matrix.Rotation(theta+msg.position[2], 4, 'Z')
+    	transZ = m.Matrix.Translation((0,0,d))
+    	transX = m.Matrix.Translation((a,0,0))
+    	rotAlfa = m.Matrix.Rotation(alfa, 4, 'X')
+    	M3 = rotAlfa @ transX @ rotTheta @ transZ
+
+    	Mk = M1 @ M2 @ M3
     
     
     	xyz = Mk.to_translation()
@@ -44,35 +78,8 @@ class nonKdlNode(Node):
     	
     	self.publisher_.publish(pose)
     	
-    def wczytaj(self):
-   	# wczytanie danych z pliku
-    	DHtab = []
-    	M = []
-    	plik = "DHtab.txt"
     	
-    	f = open(os.path.join(get_package_share_directory('lab3'),plik),"r")
-    	for line in f:
-    		DHtab.append(line.split())
-    	f.close()
 
-    	for linia in DHtab:
-    		if linia[0] == 'i':
-    			continue
-    		#stworzenie link
-    		a = float(linia[1])
-    		alfa = float(linia[2])
-    		d = float(linia[3])
-    		theta = float(linia[4])
-    		nazwa = linia[5]
-    		#liczenie macierzy transformacji jednorodnej
-    		rotTheta = m.Matrix.Rotation(theta, 4, 'Z')
-    		transZ = m.Matrix.Translation((0,0,d))
-    		transX = m.Matrix.Translation((a,0,0))
-    		rotAlfa = m.Matrix.Rotation(alfa, 4, 'X')
-    		
-    		T = rotAlfa @ transX @ rotTheta @ transZ
-    		M.append(T)
-    	return M
     	
     	
 

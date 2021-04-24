@@ -73,22 +73,6 @@
 		<limit upper="4" lower="-4" effort="10" velocity="2" />  
 	</joint>
 	
-		<link name="koncowka">
-		<visual>
-			<origin xyz="${zmienne['koncowka']['promien']/2} 0 0" rpy="0 0 0"/>
-			<material name="green">
-				<color rgba="0 1 0 1"/>
-			</material>
-			<geometry>
-				<sphere radius="${zmienne['koncowka']['promien']}"/>
-			</geometry>
-		</visual>
-	</link>
-	<joint name="poloczenie-czlon3-koncowka" type="fixed">
-		<origin xyz="${zmienne['czlon3']['dlugosc']} 0 0" rpy="0 0 0"/>
-		<parent link="czlon3"/>
-		<child link="koncowka" />
-		<axis xyz="0 0 1"/>
-	</joint>
+		
 
 </robot>

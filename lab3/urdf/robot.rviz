@@ -63,7 +63,7 @@ Visualization Manager:
 
       Marker Scale: 1
       Name: TF
-      Show Arrows: true
+      Show Arrows: false
       Show Axes: true
       Show Names: false
       Tree:
@@ -124,6 +124,19 @@ Visualization Manager:
       Update Interval: 0
       Value: true
       Visual Enabled: true
+    - Class: rviz_default_plugins/Pose
+      Alpha: 1
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /non_kdl_pose
+      Shape: Axes
+      Axes Length: 0.3
+      Axes Radius: 0.05
+      Name: pozycjaNONKDL
+      Enabled: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
