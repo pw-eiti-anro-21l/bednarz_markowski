@@ -52,11 +52,7 @@
 		<parent link="czlon1"/>
 		<child link="czlon2" />
 		<axis xyz="0 0 1"/>
-<<<<<<< HEAD
 		<limit upper="0" lower="-1.57" effort="10" velocity="2" />  
-=======
-		<limit upper="0" lower="-3.14" effort="10" velocity="2" />  
->>>>>>> 40f4f7a7ddd8f09ef9617b990682631f2de4a4fc
 	</joint>
 	<link name="czlon3">
 		<visual>
@@ -74,11 +70,7 @@
 		<parent link="czlon2"/>
 		<child link="czlon3" />
 		<axis xyz="0 0 1"/>
-<<<<<<< HEAD
 		<limit upper="1.57" lower="-1.57" effort="10" velocity="2" />  
-=======
-		<limit upper="3.14" lower="-3.14" effort="10" velocity="2" />  
->>>>>>> 40f4f7a7ddd8f09ef9617b990682631f2de4a4fc
 	</joint>
 	
 		
