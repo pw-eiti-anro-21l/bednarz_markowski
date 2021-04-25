@@ -58,16 +58,9 @@ class nonKdlNode(Node):
     	transX = m.Matrix.Translation((a,0,0))
     	rotAlfa = m.Matrix.Rotation(alfa, 4, 'X')
     	M3 = rotAlfa @ transX @ rotTheta @ transZ
-    	
-    	a, alfa, d, theta = 0.3, 0, 0, 0
-    	#liczenie macierzy transformacji jednorodnej
-    	rotTheta = m.Matrix.Rotation(theta+msg.position[2], 4, 'Z')
-    	transZ = m.Matrix.Translation((0,0,d))
-    	transX = m.Matrix.Translation((a,0,0))
-    	rotAlfa = m.Matrix.Rotation(alfa, 4, 'X')
-    	M4 = rotAlfa @ transX @ rotTheta @ transZ
 
-    	Mk = M1 @ M2 @ M3 @ M4
+
+    	Mk = M1 @ M2 @ M3
     
     
     	xyz = Mk.to_translation()
