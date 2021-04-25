@@ -137,6 +137,19 @@ Visualization Manager:
       Axes Radius: 0.05
       Name: pozycjaNONKDL
       Enabled: true
+    - Class: rviz_default_plugins/Pose
+      Alpha: 1
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /kdl_pose
+      Shape: Axes
+      Axes Length: 0.2
+      Axes Radius: 0.06
+      Name: pozycjaKDL
+      Enabled: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
