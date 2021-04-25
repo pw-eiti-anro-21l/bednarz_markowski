@@ -23,6 +23,17 @@ class nonKdlNode(Node):
 
     	
     def forwardKin(self,msg):
+    	# sprawdzenie danych czy poza limitem:
+    	if msg.position[0] <-3.14 or msg.position[0] > 3.14:
+    		self.get_logger().info("przekroczono limit baza-czlon1")
+    		return
+    	if msg.position[1] <-1.57 or msg.position[1] > 0:
+    		self.get_logger().info("przekroczono limit czlon1-czlon2")
+    		return
+    	if msg.position[2] <-1.57 or msg.position[2] > 1.57:
+    		self.get_logger().info("przekroczono limit czlon2-czlon3")
+    		return
+    	
     	
     	# wczytanie danych z pliku
     	DHtab = []
