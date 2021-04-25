@@ -147,7 +147,7 @@ Visualization Manager:
         Value: /kdl_pose
       Shape: Axes
       Axes Length: 0.2
-      Axes Radius: 0.06
+      Axes Radius: 0.1
       Name: pozycjaKDL
       Enabled: true
   Enabled: true
