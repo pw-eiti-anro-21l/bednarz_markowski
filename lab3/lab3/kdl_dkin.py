@@ -48,10 +48,6 @@ class nonKdlNode(Node):
     	chain = Chain()
     	frame = Frame()
     	
-    	frame0 = frame.DH(0, 0, 0, 0)
-    	#joint0 = Joint(Joint.None)
-    	#chain.addSegment(Segment(joint0, frame0))
-    	
     	a1, alfa1, d1, theta1 = float(DHtab[0][1]),float(DHtab[0][2]),float(DHtab[0][3]),float(DHtab[0][4])
     	a2, alfa2, d2, theta2 = float(DHtab[1][1]),float(DHtab[1][2]),float(DHtab[1][3]),float(DHtab[1][4])
     	a3, alfa3, d3, theta3 = float(DHtab[2][1]),float(DHtab[2][2]),float(DHtab[2][3]),float(DHtab[2][4])
