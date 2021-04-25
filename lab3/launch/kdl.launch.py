@@ -31,7 +31,7 @@ def generate_launch_description():
       Node(
           package='lab3',
           executable='kdl_dkin',
-          name='nonkdl_dkin',
+          name='kdl_dkin',
           output='screen',
           ) ,   
       
