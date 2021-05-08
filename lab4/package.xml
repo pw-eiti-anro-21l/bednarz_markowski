@@ -8,7 +8,7 @@
   <license>License</license>
 
   <depend>rclpy</depend>
-  <depend>example_interfaces</depend>
+  <depend>lab4_srv</depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

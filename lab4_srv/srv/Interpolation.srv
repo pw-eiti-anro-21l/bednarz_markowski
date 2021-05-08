@@ -1,0 +1,7 @@
+float64 j1pose
+float64 j2pose
+float64 j3pose
+float64 time
+string type
+---
+string output
