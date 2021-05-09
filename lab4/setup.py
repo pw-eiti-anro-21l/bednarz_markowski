@@ -26,7 +26,8 @@ setup(
     entry_points={
         'console_scripts': [
             'nonkdl_dkin = lab4.nonkdl_dkin:main',
-            'kdl_dkin = lab4.kdl_dkin:main'
+            'kdl_dkin = lab4.kdl_dkin:main',
+            'jint = lab4.jint:main'
         ],
     },
 )
