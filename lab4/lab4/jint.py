@@ -70,6 +70,7 @@ class JintService(Node):
         targetJ2 = request.j2pose
         targetJ3 = request.j3pose
         targetTime = request.time
+        self. error = False
     	
         T = 0.1
         steps = int(request.time/T)
@@ -83,13 +84,46 @@ class JintService(Node):
                 self.currentJ1 = self.interpolateSpline(self.j1, targetJ1, targetTime, k*T)
                 self.currentJ2 = self.interpolateSpline(self.j2, targetJ2, targetTime, k*T)
                 self.currentJ3 = self.interpolateSpline(self.j3, targetJ3, targetTime, k*T)
+
+            #sprawdzenie limitow
+            if self.currentJ1 > self.j1Limit.upper:
+                self.currentJ1 = self.j1Limit.upper
+                self.error = True
+                self.get_logger().error("Error: Exceeded upper limit of joint1!")
+            if self.currentJ1 < self.j1Limit.lower:
+                self.currentJ1 = self.j1Limit.lower
+                self.error = True
+                self.get_logger().error("Error: Exceeded lower limit of joint1!")
+
+            if self.currentJ2 > self.j2Limit.upper:
+                self.currentJ2 = self.j2Limit.upper
+                self.error = True
+                self.get_logger().error("Error: Exceeded upper limit of joint2!")
+            if self.currentJ2 < self.j2Limit.lower:
+                self.currentJ2 = self.j2Limit.lower
+                self.error = True
+                self.get_logger().error("Error: Exceeded lower limit of joint2!")
+
+            if self.currentJ3 > self.j3Limit.upper:
+                self.currentJ3 = self.j3Limit.upper
+                self.error = True
+                self.get_logger().error("Error: Exceeded upper limit of joint3!")
+            if self.currentJ3 < self.j3Limit.lower:
+                self.currentJ3 = self.j3Limit.lower
+                self.error = True
+                self.get_logger().error("Error: Exceeded lower limit of joint3!")
+
             time.sleep(0.1)
 
         self.j1 = self.currentJ1
         self.j2 = self.currentJ2
         self.j3 = self.currentJ3
-        response.output= "Interpolation ( " + request.type + " ) succesful! Absolute errors: " + \
-        str(abs(targetJ1 - self.j1)) + ", " + str(abs(targetJ2 - self.j2)) + ", " + str(abs(targetJ3 - self.j3))
+        if self.error:
+            result = "Interpolation ( " + request.type + " ) failed! Unable to reach target positions. Absolute errors: "
+        else:
+            result = "Interpolation ( " + request.type + " ) succesful! Absolute errors: "
+        result += str(abs(targetJ1 - self.j1)) + ", " + str(abs(targetJ2 - self.j2)) + ", " + str(abs(targetJ3 - self.j3))
+        response.output = result
         return response
 
     def publishNewStates(self):
