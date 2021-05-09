@@ -29,7 +29,8 @@ setup(
             'kdl_dkin = lab4.kdl_dkin:main',
             'jint = lab4.jint:main',
             'service_oint = lab4.service_oint:main',
-            'client_oint = lab4.client_oint:main'
+            'client_oint = lab4.client_oint:main',
+            'client_jint = lab4.client_jint:main'
         ],
     },
 )
