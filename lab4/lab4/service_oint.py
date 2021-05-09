@@ -5,10 +5,10 @@ import rclpy
 from rclpy.qos import QoSProfile
 from rclpy.node import Node
 from rclpy.clock import ROSClock
-from geometry_msgs.msg import Quaternion, PoseStamped
+from geometry_msgs.msg import Quaternion, PoseStamped, Pose, Point
+from visualization_msgs.msg import Marker, MarkerArray
 from math import sin, cos
 import threading
-
 
 class OintService(Node):
 
@@ -18,6 +18,7 @@ class OintService(Node):
         self.publisher = self.create_publisher(PoseStamped, "/pose", QoSProfile(depth=10))
         self.pose_stamped = PoseStamped()
         self.pose_stamped.header.frame_id = "odom"
+        self.marker_pub = self.create_publisher(Marker, "/path", QoSProfile(depth=10))
         #pozycja startowa
         self.x = 0.0
         self.y = 0.0
@@ -29,12 +30,37 @@ class OintService(Node):
         publishingThread = threading.Thread(target=self.publishNewStates)
         publishingThread.start()
         
+        self.marker = Marker()
+        self.marker.id  = 0
+        self.marker.action = Marker.DELETEALL
+        self.marker.header.frame_id = "odom"
+        self.marker.header.stamp
+
+        self.marker.type = Marker.LINE_STRIP
+        self.marker.action = Marker.ADD
+        self.marker.scale.x = 0.1
+        self.marker.scale.y = 0.1
+        self.marker.scale.z = 0.1
+        self.marker.color.a = 1.0
+        self.marker.color.r = 1.0
+        self.marker.color.g = 1.0
+        self.marker.color.b = 0.0
+        
+        
 
     def oint_control_srv_callback(self, request, response):
     	T = 0.1
+    	steps = int(request.time/T)
+    	if request.time <= 0:
+    		response.output = "Invalid interpolation time; Interpolation impossible; Terminating"
+    		return response
+    	if request.type != "Linear" and request.type != "Spline":
+    		response.output = "Invalid interpolation type; Avaible types: Linear, Spline; Terminating"
+    		return response
+
     	
     	if request.type == "Linear":
-    		steps = int(request.time/T)
+    		
     		delta_x = (request.x-self.x)/steps
     		delta_y = (request.y-self.y)/steps
     		delta_z = (request.z-self.z)/steps
@@ -58,8 +84,44 @@ class OintService(Node):
     			self.pose_stamped.pose.orientation = self.euler_to_quaternion(self.roll, self.pitch, self.yaw) 
     			self.publisher.publish(self.pose_stamped)
     			time.sleep(T)
-
+    			point = Point()
+    			point.x = self.x
+    			point.y = self.y
+    			point.z = self.z
+    			self.marker.points.append(point)
+    			self.marker_pub.publish(self.marker)
+    			
+    		result = "Interpolation 'Linear' succesful!"
+    		response.output = result
     		return response
+    		
+    	elif request.type == "Spline":
+    		for k in range(1, steps+1):
+    			now = self.get_clock().now()
+    			self.pose_stamped.header.stamp = now.to_msg()
+    			self.x = self.interpolateSpline(self.x, request.x, request.time)
+    			self.pose_stamped.pose.position.x = self.x
+    			self.y = self.interpolateSpline(self.y, request.y, request.time)
+    			self.pose_stamped.pose.position.y = self.y
+    			self.z = self.interpolateSpline(self.z, request.z, request.time)
+    			self.pose_stamped.pose.position.z = self.z
+    			self.roll = self.interpolateSpline(self.roll, request.roll, request.time)
+    			self.pitch = self.interpolateSpline(self.pitch, request.pitch, request.time)
+    			self.yaw = self.interpolateSpline(self.yaw, request.yaw, request.time)
+    			
+    			self.pose_stamped.pose.orientation = self.euler_to_quaternion(self.roll, self.pitch, self.yaw) 
+    			self.publisher.publish(self.pose_stamped)
+    			time.sleep(T)
+    			point = Point()
+    			point.x = self.x
+    			point.y = self.y
+    			point.z = self.z
+    			self.marker.points.append(point)
+    			self.marker_pub.publish(self.marker)
+    		result = "Interpolation 'Spline' succesful!"
+    		response.output = result
+    		return response
+    	
     		
     def publishNewStates(self):
     	while True:
@@ -75,6 +137,16 @@ class OintService(Node):
 	    		time.sleep(0.1)
 	    	except KeyboardInterrupt:
 	    		exit(0)
+	    		
+    def interpolateSpline(self, x0, x1, t):
+        #wzor z wikipedii, t0 = 0
+        tx = 1/t
+        k1 = 0 
+        k2 = 0 # pochodne sa zerowe
+        a = k1*t - (x1-x0)
+        b = -k2*t + (x1-x0)
+        qx = (1-tx)*x0 + tx*x1 + tx*(1-tx)*((1-tx)*a+tx*b) 
+        return qx
 			
     def euler_to_quaternion(self, roll, pitch, yaw):
     	qx = sin(roll/2) * cos(pitch/2) * cos(yaw/2) - cos(roll/2) * sin(pitch/2) * sin(yaw/2)
