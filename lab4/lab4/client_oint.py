@@ -18,15 +18,15 @@ class OintClient(Node):
     def send_request(self):
     
     	try:
-    		self.req.x = int(sys.argv[0])
-    		self.req.y = int(sys.argv[1])
-    		self.req.z = int(sys.argv[2])
-    		self.req.roll = int(sys.argv[3])
-    		self.req.pitch = int(sys.argv[4])
-    		self.req.yaw = int(sys.argv[5])
+    		self.req.x = float(sys.argv[1])
+    		self.req.y = float(sys.argv[2])
+    		self.req.z = float(sys.argv[3])
+    		self.req.roll = float(sys.argv[4])
+    		self.req.pitch = float(sys.argv[5])
+    		self.req.yaw = float(sys.argv[6])
     		
-    		self.req.time = int(sys.argv[6])
-    		self.req.type = int(sys.argv[7])
+    		self.req.time = float(sys.argv[7])
+    		self.req.type = sys.argv[8]
     	except ValueError:
     		self.get_logger().info('ValueError')
     	self.future = self.cli.call_async(self.req)

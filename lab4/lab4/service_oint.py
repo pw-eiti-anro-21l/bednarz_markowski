@@ -96,18 +96,24 @@ class OintService(Node):
     		return response
     		
     	elif request.type == "Spline":
+    		start_x = self.x
+    		start_y = self.y
+    		start_roll = self.roll
+    		start_pitch = self.pitch
+    		start_z = self.z
+    		start_yaw = self.yaw
     		for k in range(1, steps+1):
     			now = self.get_clock().now()
     			self.pose_stamped.header.stamp = now.to_msg()
-    			self.x = self.interpolateSpline(self.x, request.x, request.time)
+    			self.x = self.interpolateSpline(start_x, request.x, request.time, k*T)
     			self.pose_stamped.pose.position.x = self.x
-    			self.y = self.interpolateSpline(self.y, request.y, request.time)
+    			self.y = self.interpolateSpline(start_y, request.y, request.time, k*T)
     			self.pose_stamped.pose.position.y = self.y
-    			self.z = self.interpolateSpline(self.z, request.z, request.time)
+    			self.z = self.interpolateSpline(start_z, request.z, request.time, k*T)
     			self.pose_stamped.pose.position.z = self.z
-    			self.roll = self.interpolateSpline(self.roll, request.roll, request.time)
-    			self.pitch = self.interpolateSpline(self.pitch, request.pitch, request.time)
-    			self.yaw = self.interpolateSpline(self.yaw, request.yaw, request.time)
+    			self.roll = self.interpolateSpline(start_roll, request.roll, request.time, k*T)
+    			self.pitch = self.interpolateSpline(start_pitch, request.pitch, request.time, k*T)
+    			self.yaw = self.interpolateSpline(start_yaw, request.yaw, request.time, k*T)
     			
     			self.pose_stamped.pose.orientation = self.euler_to_quaternion(self.roll, self.pitch, self.yaw) 
     			self.publisher.publish(self.pose_stamped)
@@ -138,9 +144,9 @@ class OintService(Node):
 	    	except KeyboardInterrupt:
 	    		exit(0)
 	    		
-    def interpolateSpline(self, x0, x1, t):
+    def interpolateSpline(self, x0, x1, t, timePassed):
         #wzor z wikipedii, t0 = 0
-        tx = 1/t
+        tx = timePassed/t
         k1 = 0 
         k2 = 0 # pochodne sa zerowe
         a = k1*t - (x1-x0)
