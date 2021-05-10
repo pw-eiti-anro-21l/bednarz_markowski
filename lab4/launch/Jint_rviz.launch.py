@@ -42,6 +42,12 @@ def generate_launch_description():
           executable = 'jint',
           name = 'jint',
           output = 'screen'
-        )
+        ),
+      Node(
+          package='lab4',
+          executable='kdl_dkin',
+          name='kdl_dkin',
+          output='screen',
+          ) 
   ])
 

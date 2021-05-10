@@ -82,7 +82,6 @@ class OintService(Node):
     			self.yaw += delta_yaw
     			
     			self.pose_stamped.pose.orientation = self.euler_to_quaternion(self.roll, self.pitch, self.yaw) 
-    			self.publisher.publish(self.pose_stamped)
     			time.sleep(T)
     			point = Point()
     			point.x = self.x
@@ -116,7 +115,6 @@ class OintService(Node):
     			self.yaw = self.interpolateSpline(start_yaw, request.yaw, request.time, k*T)
     			
     			self.pose_stamped.pose.orientation = self.euler_to_quaternion(self.roll, self.pitch, self.yaw) 
-    			self.publisher.publish(self.pose_stamped)
     			time.sleep(T)
     			point = Point()
     			point.x = self.x

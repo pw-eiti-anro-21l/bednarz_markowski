@@ -7,9 +7,10 @@ import rclpy
 from rclpy.qos import QoSProfile
 from rclpy.node import Node
 from rclpy.clock import ROSClock
-from geometry_msgs.msg import Quaternion, PoseStamped
+from geometry_msgs.msg import Quaternion, PoseStamped, Point
 from sensor_msgs.msg import JointState
 from tf2_ros import TransformBroadcaster, TransformStamped
+from visualization_msgs.msg import Marker, MarkerArray
 
 class Limit: #prosta klasa do przechowania limitow jointow
     def __init__(self, lower, upper):
@@ -24,6 +25,7 @@ class JintService(Node):
         self.srv = self.create_service(Jint, 'jint_control_srv', self.jint_control_srv_callback)
         self.publisher = self.create_publisher(JointState, 'joint_states', qos_profile)
         self.broadcaster = TransformBroadcaster(self, qos=qos_profile)
+        self.subscription = self.create_subscription(PoseStamped,'kdl_pose',self.listener_callback, QoSProfile(depth=100))
 
         self.nodeName = self.get_name()
         self.get_logger().info("{0} started".format(self.nodeName))
@@ -51,6 +53,23 @@ class JintService(Node):
 
         publishingThread = threading.Thread(target=self.publishNewStates)
         publishingThread.start()
+        
+        self.marker_pub = self.create_publisher(Marker, "/path", QoSProfile(depth=10))
+        self.marker = Marker()
+        self.marker.id  = 0
+        self.marker.action = Marker.DELETEALL
+        self.marker.header.frame_id = "baza"
+        self.marker.header.stamp
+
+        self.marker.type = Marker.LINE_STRIP
+        self.marker.action = Marker.ADD
+        self.marker.scale.x = 0.05
+        self.marker.scale.y = 0.05
+        self.marker.scale.z = 0.05
+        self.marker.color.a = 0.5
+        self.marker.color.r = 1.0
+        self.marker.color.g = 1.0
+        self.marker.color.b = 0.0
         
     def jint_control_srv_callback(self, request, response):
 
@@ -155,6 +174,18 @@ class JintService(Node):
         b = -k2*t + (x1-x0)
         qx = (1-tx)*x0 + tx*x1 + tx*(1-tx)*((1-tx)*a+tx*b) 
         return qx
+        
+    def listener_callback(self,msg):
+    	point = Point()
+    	point.x = msg.pose.position.x
+    	point.y = msg.pose.position.y
+    	point.z = msg.pose.position.z
+    	self.marker.points.append(point)
+    	self.marker_pub.publish(self.marker)
+    	
+
+    	
+    	
 
 
 def main(args=None):
