@@ -20,9 +20,9 @@ class OintService(Node):
         self.pose_stamped.header.frame_id = "odom"
         self.marker_pub = self.create_publisher(Marker, "/path", QoSProfile(depth=10))
         #pozycja startowa
-        self.x = 0.0
+        self.x = 1.5
         self.y = 0.0
-        self.z = 0.0
+        self.z = 0.5
         self.roll = 0.0
         self.pitch = 0.0
         self.yaw = 0.0
