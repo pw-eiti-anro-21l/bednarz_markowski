@@ -150,7 +150,7 @@ Visualization Manager:
       Axes Radius: 0.1
       Name: pozycjaKDL
       Enabled: true
-    - Class: rviz_default_plugins/Marker
+    - Class: rviz_default_plugins/MarkerArray
       Enabled: true
       Name: Marker
       Namespaces:
