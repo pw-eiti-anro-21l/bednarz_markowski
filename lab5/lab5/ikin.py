@@ -85,7 +85,7 @@ class Ikin(Node):
             if self.x< 0 and self.y >=0:
                 newTheta1 = math.atan(self.y/self.x) + math.pi
             if self.x< 0 and self.y <0:
-                newTheta1 = math.atan(self.y/self.x) + math.pi
+                newTheta1 = math.atan(self.y/self.x) - math.pi
             if self.x>=0 and self.y <0:
                 newTheta1 = math.atan(self.y/self.x)
             #sprawdzenie ograniczenia jointu
@@ -111,7 +111,7 @@ class Ikin(Node):
             newTheta2 = -math.atan((self.z-self.d1)/(math.sqrt(self.x**2 + self.y**2)))
             newTheta2 -= math.asin(self.a2*math.sin(self.currentJ3)/math.sqrt(self.x **2 + self.y**2 +(self.z - self.d1)**2))
             #sprawdzenie limitow
-            if newTheta2 > 0 or newTheta2 < -1.57:
+            if newTheta2 > 0 or newTheta2 < -1.571:
                 self.err = True
                 self.get_logger().info("Wyznaczenie pozycji jest niemozliwe, przekroczono limit joint 2")
             else:
