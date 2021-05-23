@@ -1,0 +1,7 @@
+string figure
+
+float64 param_a
+float64 param_b
+float64 time
+---
+string output

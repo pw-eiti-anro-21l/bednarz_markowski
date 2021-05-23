@@ -9,12 +9,14 @@ from geometry_msgs.msg import Quaternion, PoseStamped, Pose, Point
 from visualization_msgs.msg import Marker, MarkerArray
 from math import sin, cos
 import threading
+from lab4_srv.srv import Figure
 
 class OintService(Node):
 
     def __init__(self):
         super().__init__('OINT_Service')
         self.srv = self.create_service(Oint, 'oint_control_srv', self.oint_control_srv_callback)
+        self.figure_srv = self.create_service(Figure, 'oint_figure_srv', self.oint_figure_srv_callback)
         self.publisher = self.create_publisher(PoseStamped, "/pose", QoSProfile(depth=10))
         self.pose_stamped = PoseStamped()
         self.pose_stamped.header.frame_id = "odom"
@@ -125,7 +127,41 @@ class OintService(Node):
     		result = "Interpolation 'Spline' succesful!"
     		response.output = result
     		return response
-    	
+    		
+    def oint_figure_srv_callback(self, request, response):
+    	T = 0.1
+    	steps = int(request.time/T)
+    	last_x = self.x
+    	last_y = self.y
+    	last_z = self.z
+    	if request.time <= 0:
+    		response.output = "Invalid interpolation time; Interpolation impossible; Terminating"
+    		return response
+    	if request.figure != "Ellipse" and request.figure != "Rectangle":
+    		response.output = "Invalid interpolation type; Avaible types: Ellipse, Rectangle; Terminating"
+    		return response
+    	if(request.figure == 'Rectangle'):
+    		obw = 2*request.param_a +2*request.param_b
+    		
+    		j = int((request.param_a/obw)*steps)
+    		k = int((request.param_b/obw)*steps)
+    		for i in range(1,steps+1):
+	    		if i <= j:
+	    			self.y = self.y + request.param_a/(request.time*j/steps)*T
+	    			time.sleep(0.1)
+	    		if i > j and i <= j + k:
+	    			self.z  = self.z + request.param_b/(request.time*k/steps)*T
+	    			time.sleep(0.1)
+	    		if i > j+k and i <= 2*j + k:
+	    			self.y = self.y - request.param_a/(request.time*j/steps)*T
+	    			time.sleep(0.1)
+	    		if i > 2*j +k and i <= 2*(j+k):
+	    			self.z = self.z - request.param_b/(request.time*k/steps)*T
+	    			time.sleep(0.1)
+	    			
+	    	result = "Figure 'Rectangle': succesful!"
+    		response.output = result
+    		return response	
     		
     def publishNewStates(self):
     	while True:
