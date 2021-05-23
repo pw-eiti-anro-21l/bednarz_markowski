@@ -46,6 +46,7 @@ class Ikin(Node):
         self.marker.color.r = 0.0
         self.marker.color.g = 1.0
         self.marker.color.b = 0.0
+        self.id = 0
     	
     	# wczytanie danych z pliku
         DHtab = []
@@ -60,7 +61,8 @@ class Ikin(Node):
         self.d1 = float(DHtab[0][3]) # mam nadzieje ze to wysokosc podstawki
         self.alfa2 = float(DHtab[1][2])
         self.a1 = float(DHtab[2][1])
-        self.a2 = 0.3 #nie ma tego w dh
+        #self.a2 = 0.3 #nie ma tego w dh
+        self.a2 = float(DHtab[3][1])
         self.names = ["poloczenie-baza-czlon1", "poloczenie-czlon1-czlon2", "poloczenie-czlon2-czlon3"]
         self.currentJ1 = 0.0
         self.currentJ2 = 0.0
@@ -111,7 +113,7 @@ class Ikin(Node):
             newTheta2 = -math.atan((self.z-self.d1)/(math.sqrt(self.x**2 + self.y**2)))
             newTheta2 -= math.asin(self.a2*math.sin(self.currentJ3)/math.sqrt(self.x **2 + self.y**2 +(self.z - self.d1)**2))
             #sprawdzenie limitow
-            if newTheta2 > 0 or newTheta2 < -1.571:
+            if newTheta2 > 0 or newTheta2 < -1.57:
                 self.err = True
                 self.get_logger().info("Wyznaczenie pozycji jest niemozliwe, przekroczono limit joint 2")
             else:
@@ -155,10 +157,9 @@ class Ikin(Node):
             self.markerArray.markers.pop(0)
         self.markerCount += 1
         self.markerArray.markers.append(self.marker)
-        id = 0
         for m in self.markerArray.markers:
-            m.id = id
-            id+=1
+            m.id = self.id
+            self.id+=1
         self.marker_pub.publish(self.markerArray)
     	
 

@@ -31,6 +31,7 @@ setup(
             'service_oint = lab5.service_oint:main',
             'client_oint = lab5.client_oint:main',
             'client_jint = lab5.client_jint:main',
+            'client_figure_oint = lab5.client_figure_oint:main',
             'ikin = lab5.ikin:main'
         ],
     },

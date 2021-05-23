@@ -7,7 +7,7 @@ from rclpy.node import Node
 from rclpy.clock import ROSClock
 from geometry_msgs.msg import Quaternion, PoseStamped, Pose, Point
 from visualization_msgs.msg import Marker, MarkerArray
-from math import sin, cos
+from math import sin, cos, pi
 import threading
 from lab4_srv.srv import Figure
 
@@ -19,7 +19,7 @@ class OintService(Node):
         self.figure_srv = self.create_service(Figure, 'oint_figure_srv', self.oint_figure_srv_callback)
         self.publisher = self.create_publisher(PoseStamped, "/pose", QoSProfile(depth=10))
         self.pose_stamped = PoseStamped()
-        self.pose_stamped.header.frame_id = "odom"
+        self.pose_stamped.header.frame_id = "baza"
         #self.marker_pub = self.create_publisher(Marker, "/path", QoSProfile(depth=10))
         #pozycja startowa
         self.x = 1.7
@@ -131,9 +131,8 @@ class OintService(Node):
     def oint_figure_srv_callback(self, request, response):
     	T = 0.1
     	steps = int(request.time/T)
-    	last_x = self.x
-    	last_y = self.y
-    	last_z = self.z
+    	start_y = self.y
+    	start_z = self.z
     	if request.time <= 0:
     		response.output = "Invalid interpolation time; Interpolation impossible; Terminating"
     		return response
@@ -161,7 +160,15 @@ class OintService(Node):
 	    			
 	    	result = "Figure 'Rectangle': succesful!"
     		response.output = result
-    		return response	
+    		return response
+    	if(request.figure == 'Ellipse'):
+    		for i in range(1,steps+1):
+    			self.y = start_y + request.param_a*cos(2*pi*T/request.time*i) - request.param_a
+    			self.z = start_z + request.param_b*sin(2*pi*T/request.time*i)
+    			time.sleep(0.1)
+    		result = "Figure 'Ellipse': succesful!"
+    		response.output = result
+    		return response
     		
     def publishNewStates(self):
     	while True:
@@ -172,7 +179,7 @@ class OintService(Node):
 	    		self.pose_stamped.pose.position.z = self.z
 	    		self.pose_stamped.pose.orientation = self.euler_to_quaternion(self.roll, self.pitch, self.yaw) 
 	    		self.pose_stamped.header.stamp = now.to_msg()
-	    		self.pose_stamped.header.frame_id = 'odom'
+	    		self.pose_stamped.header.frame_id = 'baza'
 	    		self.publisher.publish(self.pose_stamped)
 	    		time.sleep(0.1)
 	    	except KeyboardInterrupt:
