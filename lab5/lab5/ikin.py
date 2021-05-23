@@ -39,9 +39,9 @@ class Ikin(Node):
 
         self.marker.type = Marker.SPHERE
         self.marker.action = Marker.ADD
-        self.marker.scale.x = 0.05
-        self.marker.scale.y = 0.05
-        self.marker.scale.z = 0.05
+        self.marker.scale.x = 0.1
+        self.marker.scale.y = 0.1
+        self.marker.scale.z = 0.1
         self.marker.color.a = 0.5
         self.marker.color.r = 0.0
         self.marker.color.g = 1.0
@@ -74,8 +74,8 @@ class Ikin(Node):
     def inverted_kin(self):
         self.err = False
         # obliczenie odwrotnej kinematyki
-        warunek1 = bool(math.sqrt(self.x **2 + self.y**2 +(self.z - self.d1)**2)< self.a1 + self.a2)
-        warunek2 = bool(math.sqrt(self.x **2 + self.y**2 +(self.z - self.d1)**2)> self.a1 - self.a2)
+        warunek1 = bool(math.sqrt(self.x **2 + self.y**2 +(self.z - self.d1)**2)<= self.a1 + self.a2)
+        warunek2 = bool(math.sqrt(self.x **2 + self.y**2 +(self.z - self.d1)**2)>= self.a1 - self.a2)
         if warunek1 and warunek2:
             #jezeli zadana pozycja jest w zasiegu manipulatora
             #wyznaczenie theta1
@@ -153,7 +153,12 @@ class Ikin(Node):
         self.marker.pose.position.z = self.z
         if self.markerCount > self.markerMAX:
             self.markerArray.markers.pop(0)
+        self.markerCount += 1
         self.markerArray.markers.append(self.marker)
+        id = 0
+        for m in self.markerArray.markers:
+            m.id = id
+            id+=1
         self.marker_pub.publish(self.markerArray)
     	
 
