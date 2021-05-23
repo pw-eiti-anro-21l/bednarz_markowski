@@ -18,9 +18,9 @@ class OintService(Node):
         self.publisher = self.create_publisher(PoseStamped, "/pose", QoSProfile(depth=10))
         self.pose_stamped = PoseStamped()
         self.pose_stamped.header.frame_id = "odom"
-        self.marker_pub = self.create_publisher(Marker, "/path", QoSProfile(depth=10))
+        #self.marker_pub = self.create_publisher(Marker, "/path", QoSProfile(depth=10))
         #pozycja startowa
-        self.x = 1.5
+        self.x = 1.7
         self.y = 0.0
         self.z = 0.5
         self.roll = 0.0
@@ -30,21 +30,21 @@ class OintService(Node):
         publishingThread = threading.Thread(target=self.publishNewStates)
         publishingThread.start()
         
-        self.marker = Marker()
-        self.marker.id  = 0
-        self.marker.action = Marker.DELETEALL
-        self.marker.header.frame_id = "odom"
-        self.marker.header.stamp
+        #self.marker = Marker()
+        #self.marker.id  = 0
+        #self.marker.action = Marker.DELETEALL
+        #self.marker.header.frame_id = "odom"
+        #self.marker.header.stamp
 
-        self.marker.type = Marker.LINE_STRIP
-        self.marker.action = Marker.ADD
-        self.marker.scale.x = 0.1
-        self.marker.scale.y = 0.1
-        self.marker.scale.z = 0.1
-        self.marker.color.a = 1.0
-        self.marker.color.r = 1.0
-        self.marker.color.g = 1.0
-        self.marker.color.b = 0.0
+        #self.marker.type = Marker.LINE_STRIP
+        #self.marker.action = Marker.ADD
+        #self.marker.scale.x = 0.1
+        #self.marker.scale.y = 0.1
+        #self.marker.scale.z = 0.1
+        #self.marker.color.a = 1.0
+        #self.marker.color.r = 1.0
+        #self.marker.color.g = 1.0
+        #self.marker.color.b = 0.0
         
         
 
@@ -83,12 +83,12 @@ class OintService(Node):
     			
     			self.pose_stamped.pose.orientation = self.euler_to_quaternion(self.roll, self.pitch, self.yaw) 
     			time.sleep(T)
-    			point = Point()
-    			point.x = self.x
-    			point.y = self.y
-    			point.z = self.z
-    			self.marker.points.append(point)
-    			self.marker_pub.publish(self.marker)
+    			#point = Point()
+    			#point.x = self.x
+    			#point.y = self.y
+    			#point.z = self.z
+    			#self.marker.points.append(point)
+    			#self.marker_pub.publish(self.marker)
     			
     		result = "Interpolation 'Linear' succesful!"
     		response.output = result
@@ -116,12 +116,12 @@ class OintService(Node):
     			
     			self.pose_stamped.pose.orientation = self.euler_to_quaternion(self.roll, self.pitch, self.yaw) 
     			time.sleep(T)
-    			point = Point()
-    			point.x = self.x
-    			point.y = self.y
-    			point.z = self.z
-    			self.marker.points.append(point)
-    			self.marker_pub.publish(self.marker)
+    			#point = Point()
+    			#point.x = self.x
+    			#point.y = self.y
+    			#point.z = self.z
+    			#self.marker.points.append(point)
+    			#self.marker_pub.publish(self.marker)
     		result = "Interpolation 'Spline' succesful!"
     		response.output = result
     		return response
