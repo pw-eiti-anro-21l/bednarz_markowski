@@ -41,7 +41,13 @@ def generate_launch_description():
           executable = 'service_oint',
           name = 'OINT_Service',
           output = 'screen'
-        )
+        ),
+      Node(
+          package='lab5',
+          executable='ikin',
+          name='ikin',
+          output='screen',
+          ),
 
   ])
 
