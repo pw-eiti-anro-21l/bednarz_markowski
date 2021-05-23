@@ -19,7 +19,7 @@ class Ikin(Node):
         qos_profile = QoSProfile(depth=10)
         self.joint_pub= self.create_publisher(JointState, 'ikdl_joint', QoSProfile(depth=10))
         self.get_logger().info("IKIN has been started")
-        self.pose_sub = self.create_subscription(PoseStamped, 'oint_pose', self.listener_pose, QoSProfile(depth=10))
+        self.pose_sub = self.create_subscription(PoseStamped, 'pose', self.listener_pose, QoSProfile(depth=10))
         self.odom_trans = TransformStamped()
         self.odom_trans.header.frame_id = 'odom'
         self.odom_trans.child_frame_id = 'baza'
@@ -80,7 +80,7 @@ class Ikin(Node):
         self.x = msg.pose.position.x
         self.y = msg.pose.position.y
         self.z = msg.pose.position.z
-
+        self.get_logger().info("listener dziala")
         self.inverted_kin()
         #now = self.get_clock().now()
         #self.joint_state.header.stamp = now.to_msg()
